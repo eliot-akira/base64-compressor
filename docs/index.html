@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Base64 Compressor</title>
+  <style>
+html, body {
+  margin: 0;
+}
+body {
+  padding: 1rem;
+}
+body, p, textarea, pre {
+  font-size: 16px;
+}
+p {
+  margin: 1rem 0;
+}
+.result {
+  background-color: #eee;
+  min-height: 3rem;
+}
+textarea, .result {
+  display: block;
+  width: 100%;
+  max-width: 36rem;
+  padding: .5rem;
+}
+
+.result, #decode textarea {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+</style>
+</head>
+<body>
+
+  <h1>Base64 Compressor</h1>
+
+  <article>
+    <section id=encode>
+
+      <h1>Encode</h1>
+
+      <p><textarea class="input-code" cols=60 rows=10>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</textarea></p>
+
+      <p><button type=button class="button action-clear">Clear</button></p>
+
+      <h4>Result</h4>
+
+      <div class=stats></div>
+      <p><pre class="result"></pre></p>
+
+    </section>
+    <hr>
+    <section id=decode>
+
+      <h1>Decode</h1>
+
+      <p><textarea class="input-code" cols=60 rows=10></textarea></p>
+      <p><button type=button class="button action-clear">Clear</button></p>
+
+      <h4>Result</h4>
+      <p><pre class="result"></pre></p>
+
+    </section>
+  </article>
+
+  <script src=base64-compressor.js></script>
+  <script type=module>
+// import { encode, decode } from './esm/index.js'
+const { encode, decode } = Base64Compressor
+
+const $encode = document.getElementById('encode')
+const $encodeInput = $encode.querySelector('.input-code')
+const $encodeResult = $encode.querySelector('.result')
+const $encodeClearButton = $encode.querySelector('.action-clear')
+
+const $encodeStats = $encode.querySelector('.stats')
+
+const $decode = document.getElementById('decode')
+const $decodeInput = $decode.querySelector('.input-code')
+const $decodeResult = $decode.querySelector('.result')
+const $decodeClearButton = $decode.querySelector('.action-clear')
+
+encodeInput()
+
+function encodeInput() {
+
+  const value = $encodeInput.value
+
+  encode(value)
+  .then(string => {
+
+    $encodeResult.innerText = string
+
+    const before = value.length
+    const after = string.length
+    
+    if (!before) {
+      $encodeStats.innerText = ''      
+    } else {
+      const ratio = after / before
+      $encodeStats.innerText = `Before: ${before} bytes · After: ${after} bytes · Compressed: ${(ratio * 100).toFixed(2)}%`
+    }
+
+    // Demonstrate that decode works
+    $decodeInput.value = string
+    decodeInput()
+  })
+  .catch(error => {
+    $encodeResult.innerText = error.message
+    console.error(error)
+  })
+}
+
+$encodeInput.addEventListener('keyup', function() {
+  encodeInput()
+})
+
+$encodeClearButton.addEventListener('click', function() {
+  $encodeInput.value = ''
+  $encodeResult.innerText = ''
+  $encodeStats.innerText = ''      
+
+  $decodeInput.value = ''
+  $decodeResult.innerText = ''
+})
+
+
+function decodeInput() {
+  const value = $decodeInput.value
+  decode(value)
+  .then(string => {
+    $decodeResult.innerText = string
+  })
+  .catch(error => {
+    $decodeResult.innerText = error.message
+    console.error(error)
+  })
+}
+
+$decodeInput.addEventListener('keyup', function() {
+  decodeInput()
+})
+
+$decodeClearButton.addEventListener('click', function() {
+  $decodeInput.value = ''
+  $decodeResult.innerText = ''
+})
+  </script>
+</body>
+</html>

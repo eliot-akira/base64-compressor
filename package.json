@@ -1,0 +1,48 @@
+{
+  "name": "base64-compressor",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Compress and encode data as URL-safe base64 string",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eliot-akira/base64-compressor"
+  },
+  "keywords": [
+    "gzip",
+    "base64",
+    "url"
+  ],
+  "author": "",
+  "license": "MIT",
+  "main": "build/cjs/index.js",
+  "module": "build/esm/index.js",
+  "exports": {
+    ".": {
+      "require": "./build/cjs/index.js",
+      "import": "./build/esm/index.js"
+    }
+  },
+  "files": [
+    "build",
+    "license",
+    "readme.md"
+  ],
+  "scripts": {
+    "build:cjs": "rm -rf build/cjs/* && esbuild src/index.ts --bundle --minify --sourcemap --format=cjs --outfile=build/cjs/index.js && echo '{\"type\": \"commonjs\"}' > build/cjs/package.json",
+    "build:esm": "rm -rf build/esm/* && esbuild src/**/*.ts --minify --sourcemap --format=esm --outdir=build/esm && echo '{\"type\": \"module\"}' > build/esm/package.json",
+    "build:web": "rm -rf build/web/* && esbuild src/index.ts --bundle --minify --sourcemap --format=iife --global-name=Base64Compressor --outfile=build/web/base64-compressor.js && cp build/web/base64-compressor.js* docs",
+    "build:type": "tsc --declaration --emitDeclarationOnly --outDir build",
+    "build": "mkdir -p build && npm run build:web && npm run build:cjs && npm run build:esm",
+    "dev": "concurrently --raw 'esbuild src/index.ts --bundle --minify --sourcemap --format=iife --global-name=Base64Compressor --outfile=docs/base64-compressor.js --watch' 'http-server docs -c-1'",
+    "test": "npm run build:esm && node --test build/esm",
+    "tdd": "concurrently --raw 'esbuild src/**/*.ts --minify --sourcemap --format=esm --outdir=build/esm --watch' 'node --test --watch build/esm'",
+    "format": "prettier --no-config --no-semi --single-quote --write src",
+    "release": "npm run build && npm publish --access public"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0",
+    "esbuild": "^0.19.1",
+    "http-server": "^14.1.1",
+    "prettier": "^3.0.1"
+  }
+}
