@@ -14,10 +14,6 @@ For gzip compression and decompression, it uses the [Compression Streams API](ht
 
 Binary to text encoding is done according to the specification for [Base 64 Encoding with URL and Filename Safe Alphabet](https://datatracker.ietf.org/doc/html/rfc4648#section-5).
 
-- Replace `+` with `-`
-- Replace `/` with `_`
-- Remove `=` padding
-
 ## Install
 
 ```sh
