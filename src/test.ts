@@ -8,14 +8,14 @@ const randomUnicodeString = (length: number): string =>
     String.fromCharCode(Math.floor(Math.random() * 65536)),
   ).join('')
 
-test('encode/decode string', async () => {
+test('Encode and decode string', async () => {
   for (let i = 0; i < 100; i++) {
     const text = randomUnicodeString(100)
     assert.strictEqual(text, await decode(await encode(text)))
   }
 })
 
-test('encode/decode binary', async () => {
+test('Encode and decode binary', async () => {
   for (let i = 0; i < 100; i++) {
     const buffer = new ArrayBuffer(100)
     const view = new DataView(buffer)
