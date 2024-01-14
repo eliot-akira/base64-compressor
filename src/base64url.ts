@@ -1,21 +1,23 @@
 /**
  * Base64 URL: Base64 encoding with URL-safe character set
  *
+ * TODO: Replace with atob/btoa?
+ *
+ * https://developer.mozilla.org/en-US/docs/Glossary/Base64#the_unicode_problem
+ *
  * - Replace `+` with `-`
  * - Replace `/` with `_`
- * - Remove `=` padding
+ * - Replace padding `=` with `~`
  */
 
 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'
 
 export function encodeBase64Url(arraybuffer: ArrayBuffer): string {
   const bytes = new Uint8Array(arraybuffer)
-
-  let i
   const len = bytes.length
   let base64 = ''
 
-  for (i = 0; i < len; i += 3) {
+  for (let i = 0; i < len; i += 3) {
     base64 += chars[bytes[i] >> 2]
     base64 += chars[((bytes[i] & 3) << 4) | (bytes[i + 1] >> 4)]
     base64 += chars[((bytes[i + 1] & 15) << 2) | (bytes[i + 2] >> 6)]
@@ -23,9 +25,9 @@ export function encodeBase64Url(arraybuffer: ArrayBuffer): string {
   }
 
   if (len % 3 === 2) {
-    base64 = base64.substring(0, base64.length - 1)
+    base64 = base64.substring(0, base64.length - 1) + '~'
   } else if (len % 3 === 1) {
-    base64 = base64.substring(0, base64.length - 2)
+    base64 = base64.substring(0, base64.length - 2) + '~~'
   }
 
   return base64
@@ -45,9 +47,9 @@ export function decodeBase64Url(base64: string): ArrayBuffer {
   const len: number = base64.length
   let bufferLength: number = (len * 3) / 4
 
-  if (base64[base64.length - 1] === '=') {
+  if (base64[base64.length - 1] === '~') {
     bufferLength--
-    if (base64[base64.length - 2] === '=') {
+    if (base64[base64.length - 2] === '~') {
       bufferLength--
     }
   }

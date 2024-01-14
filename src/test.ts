@@ -9,19 +9,25 @@ const randomUnicodeString = (length: number): string =>
   ).join('')
 
 test('Encode and decode string', async () => {
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 1000; i++) {
+    const length = i + 1 // Math.floor(Math.random() * 100)
     const text = randomUnicodeString(100)
-    assert.strictEqual(text, await decode(await encode(text)))
+    const result = await decode(await encode(text))
+    assert.strictEqual(text, result)
+    assert.strictEqual(text.length, result.length)
   }
 })
 
 test('Encode and decode binary', async () => {
-  for (let i = 0; i < 100; i++) {
-    const buffer = new ArrayBuffer(100)
+  for (let i = 0; i < 1000; i++) {
+    const length = i + 1
+    const buffer = new ArrayBuffer(length)
     const view = new DataView(buffer)
     for (let i = 0, len = buffer.byteLength - 1; i < len; i++) {
       view.setUint16(i, Math.floor(Math.random() * (1 << 29) - 1))
     }
-    assert.deepEqual(buffer, await decodeBinary(await encodeBinary(buffer)))
+    const result = await decodeBinary(await encodeBinary(buffer))
+    assert.deepEqual(buffer, result)
+    assert.strictEqual(buffer.byteLength, result.byteLength)
   }
 })
