@@ -1,6 +1,6 @@
 {
   "name": "base64-compressor",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "description": "Compress and encode data as URL-safe base64 string",
   "repository": {
@@ -40,6 +40,7 @@
     "release": "npm run build && npm publish --access public"
   },
   "devDependencies": {
+    "@types/node": "^20.10.2",
     "concurrently": "^8.2.0",
     "esbuild": "^0.19.1",
     "http-server": "^14.1.1",
