@@ -1,6 +1,6 @@
 {
   "name": "base64-compressor",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "description": "Compress and encode data as URL-safe base64 string",
   "repository": {
