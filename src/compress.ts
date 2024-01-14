@@ -1,7 +1,7 @@
 // Browser and server
 const { CompressionStream, DecompressionStream, Response } = globalThis
 
-type CompressionFormat = 'gzip' | 'deflate' | 'deflate-raw'
+export type CompressionFormat = 'gzip' | 'deflate' | 'deflate-raw'
 
 export const defaultCompressionFormat = 'gzip'
 
